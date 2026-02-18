@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Generative Art 3 - Interactive</title>
+</head>
+<body>
+    <h1>Generative Art 3 (Interactive)</h1>
+
+    <form method="post">
+        Number of shapes: <input type="number" name="num_shapes" value="50"><br>
+        Palette:
+        <select name="palette">
+            <option value="random">Random</option>
+            <option value="blue">Blue</option>
+            <option value="red">Red</option>
+        </select><br>
+        <input type="submit" value="Generate">
+    </form>
+
+    {% if image %}
+        <h3>Result:</h3>
+        <img src="{{ image }}" alt="Artwork 3">
+    {% endif %}
+
+    <p><a href="/">Back to Home</a></p>
+</body>
+</html>

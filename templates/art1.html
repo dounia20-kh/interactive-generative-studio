@@ -1,0 +1,15 @@
+<h2>Artwork 1</h2>
+<form method="post">
+    Number of shapes: <input type="number" name="num_shapes" value="50"><br>
+    Palette: 
+    <select name="palette">
+        <option value="random">Random</option>
+        <option value="blue">Blue</option>
+        <option value="red">Red</option>
+    </select><br>
+    <input type="submit" value="Generate">
+</form>
+
+{% if image %}
+    <img src="{{ image }}" alt="Artwork">
+{% endif %}
