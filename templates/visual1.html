@@ -1,0 +1,11 @@
+<h1>Artistic Weather Visualization</h1>
+
+<form method="post">
+    <input type="submit" value="Generate">
+</form>
+
+{% if image %}
+<img src="{{ image }}" alt="Visualization">
+{% endif %}
+
+<p><a href="/">Back to Home</a></p>
