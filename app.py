@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 from art.art1 import generate_art1
 from art.art2 import generate_art2
 from art.art3 import generate_art3
-from visualization.visual1 import generate_visual1  # <-- move this here
+from visualization.visual1 import generate_visual1 
 
 app = Flask(__name__)
 
@@ -70,8 +70,31 @@ def visual1_view():
     image = None
     if request.method == "POST":
         image = generate_visual1()
+        if image is None:
+            return "<h2>Error: Could not generate visualization. Check CSV data.</h2>"
     return render_template("visual1.html", image=image)
 
+@app.route('/plot1.png')
+def plot1():
+    fig, ax = plt.subplots(figsize=(6,4))
+    ax.plot(df['x'], df['y'], color='cyan', linewidth=3)
+    ax.set_facecolor('#1f2937')  # dark background
+    fig.patch.set_facecolor('#1f2937')
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight', facecolor=fig.get_facecolor())
+    buf.seek(0)
+    return send_file(buf, mimetype='image/png')
+
+@app.route('/plot2.png')
+def plot2():
+    fig, ax = plt.subplots(figsize=(6,4))
+    ax.bar(df['x'], df['y'], color='magenta')
+    ax.set_facecolor('#1f2937')
+    fig.patch.set_facecolor('#1f2937')
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight', facecolor=fig.get_facecolor())
+    buf.seek(0)
+    return send_file(buf, mimetype='image/png')
 
 if __name__ == "__main__":
     app.run(debug=True)

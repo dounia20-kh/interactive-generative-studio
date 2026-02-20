@@ -1,11 +1,22 @@
-<h1>Artistic Weather Visualization</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Artistic Weather Visualization</title>
+</head>
+<body>
+    <h1>Artistic Weather Visualization</h1>
 
-<form method="post">
-    <input type="submit" value="Generate">
-</form>
+    <form method="post">
+        <input type="submit" value="Generate Artwork">
+    </form>
 
-{% if image %}
-<img src="{{ image }}" alt="Visualization">
-{% endif %}
+    {% if image %}
+        <div style="margin-top:20px;">
+            <img src="{{ image }}" alt="Visualization" width="700">
+        </div>
+    {% endif %}
 
-<p><a href="/">Back to Home</a></p>
+    <p><a href="/">Back to Home</a></p>
+</body>
+</html>
