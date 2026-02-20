@@ -7,22 +7,115 @@
 <body>
     <h1>Generative Art 3 (Interactive)</h1>
 
-    <form method="post">
-        Number of shapes: <input type="number" name="num_shapes" value="50"><br>
+    <!-- Controls -->
+    <form id="controlsForm">
+        Number of shapes: <input type="number" id="numShapes" value="50"><br><br>
+
         Palette:
-        <select name="palette">
-            <option value="random">Random</option>
-            <option value="blue">Blue</option>
-            <option value="red">Red</option>
-        </select><br>
-        <input type="submit" value="Generate">
+        <select id="paletteSelect">
+            <option value="sunset">Sunset</option>
+            <option value="ocean">Ocean</option>
+            <option value="pastel">Pastel</option>
+            <option value="neon">Neon</option>
+            <option value="dark">Dark</option>
+        </select><br><br>
+
+        <button type="button" id="generateBtn">Generate</button>
     </form>
 
-    {% if image %}
-        <h3>Result:</h3>
-        <img src="{{ image }}" alt="Artwork 3">
-    {% endif %}
+    <!-- Canvas for interactive drawing -->
+    <h3>Interactive Canvas:</h3>
+    <canvas id="art3Canvas" width="600" height="600" style="border:1px solid #000;"></canvas>
 
     <p><a href="/">Back to Home</a></p>
+
+    <!-- JavaScript for interactivity -->
+    <script>
+    const canvas = document.getElementById('art3Canvas');
+    const ctx = canvas.getContext('2d');
+
+    const palettes = {
+        sunset: ["#FF5733", "#FF8D1A", "#FFC300", "#C70039", "#900C3F"],
+        ocean: ["#003f5c", "#2f4b7c", "#008080", "#00b4d8", "#90e0ef"],
+        pastel: ["#FFB3BA", "#FFDFBA", "#FFFFBA", "#BAFFC9", "#BAE1FF"],
+        neon: ["#39FF14", "#FF10F0", "#00FFFF", "#FF3131", "#FFFF33"],
+        dark: ["#1a1a1a", "#333333", "#4d4d4d", "#666666", "#999999"]
+    };
+
+    let currentPalette = palettes["sunset"];
+    let shapes = [];
+    const shapeTypes = ["circle", "square", "triangle"];
+
+    // Update palette
+    document.getElementById('paletteSelect').addEventListener('change', function() {
+        currentPalette = palettes[this.value];
+    });
+
+    
+    canvas.addEventListener('click', function(e) {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const size = Math.random() * 30 + 10;
+        const color = currentPalette[Math.floor(Math.random() * currentPalette.length)];
+        const type = shapeTypes[Math.floor(Math.random() * shapeTypes.length)];
+
+        shapes.push({x, y, size, color, type});
+        drawShapes();
+    });
+
+    
+    function drawShapes() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        shapes.forEach(s => {
+            ctx.fillStyle = s.color;
+            switch(s.type) {
+                case "circle":
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.size, 0, 2 * Math.PI);
+                    ctx.fill();
+                    break;
+                case "square":
+                    ctx.fillRect(s.x - s.size/2, s.y - s.size/2, s.size, s.size);
+                    break;
+                case "triangle":
+                    ctx.beginPath();
+                    ctx.moveTo(s.x, s.y - s.size/2);
+                    ctx.lineTo(s.x - s.size/2, s.y + s.size/2);
+                    ctx.lineTo(s.x + s.size/2, s.y + s.size/2);
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+            }
+        });
+    }
+
+
+    document.getElementById('generateBtn').addEventListener('click', function() {
+        shapes = [];
+        const numShapes = Number(document.getElementById('numShapes').value);
+        for(let i=0; i<numShapes; i++){
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const size = Math.random() * 30 + 10;
+            const color = currentPalette[Math.floor(Math.random() * currentPalette.length)];
+            const type = shapeTypes[Math.floor(Math.random() * shapeTypes.length)];
+            shapes.push({x, y, size, color, type});
+        }
+        drawShapes();
+    });
+
+    
+    const numShapesInput = document.getElementById('numShapes');
+    for(let i=0; i<Number(numShapesInput.value); i++){
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const size = Math.random() * 30 + 10;
+        const color = currentPalette[Math.floor(Math.random() * currentPalette.length)];
+        const type = shapeTypes[Math.floor(Math.random() * shapeTypes.length)];
+        shapes.push({x, y, size, color, type});
+    }
+    drawShapes();
+    </script>
 </body>
 </html>

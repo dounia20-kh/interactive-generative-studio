@@ -7,17 +7,48 @@
 <body>
     <h1>Generative Art 2 (OOP)</h1>
 
-    <form method="post">
-        Number of shapes: <input type="number" name="num_shapes" value="50"><br>
-        <input type="submit" value="Generate">
+    <!-- Controls -->
+    <form id="art2Form">
+        Number of shapes: <input type="number" id="numShapes" value="50"><br><br>
+
+        Palette:
+        <select id="paletteSelect">
+            <option value="sunset">Sunset</option>
+            <option value="ocean">Ocean</option>
+            <option value="pastel">Pastel</option>
+            <option value="neon">Neon</option>
+            <option value="dark">Dark</option>
+        </select><br><br>
+
+        <button type="button" id="generateBtn">Generate</button>
     </form>
 
-    {% if image %}
-        <h3>Result:</h3>
-        <img src="{{ image }}" alt="Artwork 2">
-    {% endif %}
+    <h3>Result:</h3>
+    <img id="art2Image" src="{{ image or '' }}" alt="Artwork 2" style="border:1px solid #ccc; margin-top:10px;">
 
     <p><a href="/">Back to Home</a></p>
+
+    <!-- JavaScript for AJAX image update -->
+    <script>
+    const art2Image = document.getElementById('art2Image');
+
+   
+    function updateImage() {
+        const numShapes = document.getElementById('numShapes').value;
+        const palette = document.getElementById('paletteSelect').value;
+
+        fetch(`/art2_ajax?num_shapes=${numShapes}&palette=${palette}`)
+            .then(response => response.blob())
+            .then(blob => {
+                art2Image.src = URL.createObjectURL(blob);
+            });
+    }
+
+  
+    document.getElementById('generateBtn').addEventListener('click', updateImage);
+
+    
+    window.addEventListener('DOMContentLoaded', updateImage);
+    </script>
 </body>
 </html>
-

@@ -1,15 +1,37 @@
-<h2>Artwork 1</h2>
-<form method="post">
-    Number of shapes: <input type="number" name="num_shapes" value="50"><br>
-    Palette: 
-    <select name="palette">
-        <option value="random">Random</option>
-        <option value="blue">Blue</option>
-        <option value="red">Red</option>
-    </select><br>
-    <input type="submit" value="Generate">
+<h2>Artwork 1 - Generative Shapes</h2>
+
+<!-- Controls -->
+<form id="art1Form">
+    <label>Number of shapes:</label>
+    <input type="number" id="numShapes" value="50" min="10" max="200"><br><br>
+
+    <label>Color Palette:</label>
+    <select id="paletteSelect">
+        <option value="sunset">Sunset</option>
+        <option value="ocean">Ocean</option>
+        <option value="pastel">Pastel</option>
+        <option value="neon">Neon</option>
+        <option value="dark">Dark Mode</option>
+        <option value="random">Fully Random</option>
+    </select><br><br>
+
+    <button type="button" id="generateBtn">Generate Artwork</button>
 </form>
 
-{% if image %}
-    <img src="{{ image }}" alt="Artwork">
-{% endif %}
+<div style="margin-top:20px;">
+    <img id="art1Image" src="{{ image or '' }}" alt="Artwork" width="500">
+</div>
+
+<!-- JavaScript for AJAX image update -->
+<script>
+document.getElementById('generateBtn').addEventListener('click', function() {
+    const numShapes = document.getElementById('numShapes').value;
+    const palette = document.getElementById('paletteSelect').value;
+
+    fetch(`/art1_ajax?num_shapes=${numShapes}&palette=${palette}`)
+        .then(response => response.blob())
+        .then(blob => {
+            document.getElementById('art1Image').src = URL.createObjectURL(blob);
+        });
+});
+</script>

@@ -14,28 +14,56 @@ def home():
 def art1_view():
     image = None
     if request.method == "POST":
-        num_shapes = int(request.form["num_shapes"])
-        palette = request.form.get("palette", "random")
+        try:
+            num_shapes = int(request.form.get("num_shapes", 50))
+            if num_shapes < 1: 
+                num_shapes = 50
+        except ValueError:
+            num_shapes = 50
+        palette = request.form.get("palette", "sunset")  # "sunset" par défaut si vide
         image = generate_art1(num_shapes, palette)
+
     return render_template("art1.html", image=image)
+from flask import send_file
+
+@app.route('/art1_ajax')
+def art1_ajax():
+    num_shapes = int(request.args.get("num_shapes", 50))
+    palette = request.args.get("palette", "random")
+    filename = generate_art1(num_shapes, palette)  # make sure art1.py supports palette
+    return send_file(filename, mimetype='image/png')
 
 @app.route('/art2', methods=["GET", "POST"])
 def art2_view():
-    image = None
+   
     if request.method == "POST":
-        num_shapes = int(request.form["num_shapes"])
-        image = generate_art2(num_shapes)
+        num_shapes = int(request.form.get("num_shapes", 50))
+        palette = request.form.get("palette", "sunset")
+    else:
+        num_shapes = 50
+        palette = "sunset"
+
+   
+    image = generate_art2(num_shapes, palette)
     return render_template("art2.html", image=image)
+
+from flask import send_file
+
+@app.route('/art2_ajax')
+def art2_ajax():
+    num_shapes = int(request.args.get("num_shapes", 50))
+    palette = request.args.get("palette", "sunset")
+    filename = generate_art2(num_shapes, palette)
+    return send_file(filename, mimetype='image/png')
 
 @app.route('/art3', methods=["GET", "POST"])
 def art3_view():
     image = None
     if request.method == "POST":
         num_shapes = int(request.form["num_shapes"])
-        palette = request.form.get("palette", "random")
+        palette = request.form.get("palette", "sunset")
         image = generate_art3(num_shapes, palette)
     return render_template("art3.html", image=image)
-
 
 @app.route('/visual1', methods=["GET", "POST"])
 def visual1_view():
